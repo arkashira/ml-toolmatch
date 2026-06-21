@@ -1,57 +1,34 @@
 import json
 from dataclasses import dataclass
-from typing import Dict
+from typing import List, Dict
 
 @dataclass
-class RiskAssessment:
-    technical_complexity: float
-    maintenance_overhead: float
-    integration_challenges: float
+class Tool:
+    name: str
+    validation_data: Dict[str, str]
 
-    def calculate_risk_score(self) -> float:
-        return (self.technical_complexity + self.maintenance_overhead + self.integration_challenges) / 3
+class ToolMatch:
+    def __init__(self, knowledge_base: Dict[str, Tool]):
+        self.knowledge_base = knowledge_base
 
-@dataclass
-class CostModel:
-    team_size: int
-    tool_pricing: float
-    development_hours: int
+    def sync_with_pgvector(self, pgvector_data: List[Dict[str, str]]):
+        for tool_data in pgvector_data:
+            tool_name = tool_data['name']
+            validation_data = tool_data['validation_data']
+            self.knowledge_base[tool_name] = Tool(tool_name, validation_data)
 
-    def calculate_cost(self) -> float:
-        return self.team_size * self.tool_pricing * self.development_hours
+    def import_historical_tool_validation_data(self, historical_data: List[Dict[str, str]]):
+        for tool_data in historical_data:
+            tool_name = tool_data['name']
+            validation_data = tool_data['validation_data']
+            if tool_name not in self.knowledge_base:
+                self.knowledge_base[tool_name] = Tool(tool_name, validation_data)
 
-def automated_risk_assessment_and_cost_modeling(build_option: Dict, buy_option: Dict) -> Dict:
-    build_risk_assessment = RiskAssessment(
-        technical_complexity=build_option['technical_complexity'],
-        maintenance_overhead=build_option['maintenance_overhead'],
-        integration_challenges=build_option['integration_challenges']
-    )
-    build_cost_model = CostModel(
-        team_size=build_option['team_size'],
-        tool_pricing=build_option['tool_pricing'],
-        development_hours=build_option['development_hours']
-    )
-    buy_risk_assessment = RiskAssessment(
-        technical_complexity=buy_option['technical_complexity'],
-        maintenance_overhead=buy_option['maintenance_overhead'],
-        integration_challenges=buy_option['integration_challenges']
-    )
-    buy_cost_model = CostModel(
-        team_size=buy_option['team_size'],
-        tool_pricing=buy_option['tool_pricing'],
-        development_hours=buy_option['development_hours']
-    )
-    build_risk_score = build_risk_assessment.calculate_risk_score()
-    build_cost = build_cost_model.calculate_cost()
-    buy_risk_score = buy_risk_assessment.calculate_risk_score()
-    buy_cost = buy_cost_model.calculate_cost()
-    return {
-        'build': {
-            'risk_score': round(build_risk_score, 6),
-            'cost': build_cost
-        },
-        'buy': {
-            'risk_score': round(buy_risk_score, 6),
-            'cost': buy_cost
-        }
-    }
+    def get_tool(self, tool_name: str):
+        return self.knowledge_base.get(tool_name)
+
+    def update_tool(self, tool_name: str, new_validation_data: Dict[str, str]):
+        if tool_name in self.knowledge_base:
+            self.knowledge_base[tool_name].validation_data = new_validation_data
+        else:
+            raise ValueError("Tool not found in knowledge base")
