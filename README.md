@@ -1,20 +1,8 @@
-# ML Toolmatch
+# Toolmatch
+Toolmatch is a Python project that provides automated risk assessment and cost modeling for build and buy options.
 
-A Python script that loads a sample configuration, performs a mock tool recommendation, and includes a unit test verifying the recommendation logic.
+## Usage
+To use Toolmatch, simply call the `automated_risk_assessment_and_cost_modeling` function with two dictionaries representing the build and buy options.
 
-## Build and Run
-
-1. Clone the repository
-2. Run `python -m ml_toolmatch --config config.json --input input.json`
-
-## Configuration
-
-The configuration file should be in JSON format and contain a list of tools with their required input.
-
-## Input
-
-The input file should be in JSON format and contain the input data.
-
-## Tests
-
-Run the tests using `python -m pytest`
+## Testing
+To run the tests, use the `pytest` command.
