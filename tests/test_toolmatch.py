@@ -1,50 +1,50 @@
-import pytest
-from toolmatch import ToolMatch, Tool
+from toolmatch import ToolMatch
 
-def test_sync_with_pgvector():
-    knowledge_base = {}
-    pgvector_data = [
-        {'name': 'tool1', 'validation_data': {'key1': 'value1'}},
-        {'name': 'tool2', 'validation_data': {'key2': 'value2'}}
-    ]
-    tool_match = ToolMatch(knowledge_base)
-    tool_match.sync_with_pgvector(pgvector_data)
-    assert len(tool_match.knowledge_base) == 2
-    assert tool_match.knowledge_base['tool1'].name == 'tool1'
-    assert tool_match.knowledge_base['tool1'].validation_data == {'key1': 'value1'}
+def test_calculate_cost():
+    tool_match = ToolMatch(
+        team_size=10,
+        tool_pricing={"tool1": 100, "tool2": 200},
+        development_hours=100,
+        technical_complexity=5,
+        maintenance_overhead=3,
+        integration_challenges=4
+    )
+    assert tool_match.calculate_cost() == 300000
 
-def test_import_historical_tool_validation_data():
-    knowledge_base = {}
-    historical_data = [
-        {'name': 'tool1', 'validation_data': {'key1': 'value1'}},
-        {'name': 'tool2', 'validation_data': {'key2': 'value2'}}
-    ]
-    tool_match = ToolMatch(knowledge_base)
-    tool_match.import_historical_tool_validation_data(historical_data)
-    assert len(tool_match.knowledge_base) == 2
-    assert tool_match.knowledge_base['tool1'].name == 'tool1'
-    assert tool_match.knowledge_base['tool1'].validation_data == {'key1': 'value1'}
+def test_calculate_risk():
+    tool_match = ToolMatch(
+        team_size=10,
+        tool_pricing={"tool1": 100, "tool2": 200},
+        development_hours=100,
+        technical_complexity=5,
+        maintenance_overhead=3,
+        integration_challenges=4
+    )
+    assert tool_match.calculate_risk() == 4
 
-def test_get_tool():
-    knowledge_base = {
-        'tool1': Tool('tool1', {'key1': 'value1'})
-    }
-    tool_match = ToolMatch(knowledge_base)
-    tool = tool_match.get_tool('tool1')
-    assert tool.name == 'tool1'
-    assert tool.validation_data == {'key1': 'value1'}
+def test_get_build_buy_options():
+    tool_match = ToolMatch(
+        team_size=10,
+        tool_pricing={"tool1": 100, "tool2": 200},
+        development_hours=100,
+        technical_complexity=5,
+        maintenance_overhead=3,
+        integration_challenges=4
+    )
+    build_option, buy_option = tool_match.get_build_buy_options()
+    assert build_option["cost"] == 300000
+    assert build_option["risk_score"] == 4
+    assert buy_option["cost"] == 240000
+    assert buy_option["risk_score"] == 3.2
 
-def test_update_tool():
-    knowledge_base = {
-        'tool1': Tool('tool1', {'key1': 'value1'})
-    }
-    tool_match = ToolMatch(knowledge_base)
-    new_validation_data = {'key2': 'value2'}
-    tool_match.update_tool('tool1', new_validation_data)
-    assert tool_match.knowledge_base['tool1'].validation_data == {'key2': 'value2'}
-
-def test_update_tool_not_found():
-    knowledge_base = {}
-    tool_match = ToolMatch(knowledge_base)
-    with pytest.raises(ValueError):
-        tool_match.update_tool('tool1', {'key1': 'value1'})
+def test_edge_case_zero_team_size():
+    tool_match = ToolMatch(
+        team_size=0,
+        tool_pricing={"tool1": 100, "tool2": 200},
+        development_hours=100,
+        technical_complexity=5,
+        maintenance_overhead=3,
+        integration_challenges=4
+    )
+    assert tool_match.calculate_cost() == 0
+    assert tool_match.calculate_risk() == 4

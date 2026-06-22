@@ -1,34 +1,48 @@
 import json
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Dict
 
 @dataclass
-class Tool:
-    name: str
-    validation_data: Dict[str, str]
-
 class ToolMatch:
-    def __init__(self, knowledge_base: Dict[str, Tool]):
-        self.knowledge_base = knowledge_base
+    team_size: int
+    tool_pricing: Dict[str, float]
+    development_hours: int
+    technical_complexity: int
+    maintenance_overhead: int
+    integration_challenges: int
 
-    def sync_with_pgvector(self, pgvector_data: List[Dict[str, str]]):
-        for tool_data in pgvector_data:
-            tool_name = tool_data['name']
-            validation_data = tool_data['validation_data']
-            self.knowledge_base[tool_name] = Tool(tool_name, validation_data)
+    def calculate_cost(self):
+        total_cost = 0
+        for tool, price in self.tool_pricing.items():
+            total_cost += price * self.team_size * self.development_hours
+        return total_cost
 
-    def import_historical_tool_validation_data(self, historical_data: List[Dict[str, str]]):
-        for tool_data in historical_data:
-            tool_name = tool_data['name']
-            validation_data = tool_data['validation_data']
-            if tool_name not in self.knowledge_base:
-                self.knowledge_base[tool_name] = Tool(tool_name, validation_data)
+    def calculate_risk(self):
+        risk_score = (self.technical_complexity + self.maintenance_overhead + self.integration_challenges) / 3
+        return risk_score
 
-    def get_tool(self, tool_name: str):
-        return self.knowledge_base.get(tool_name)
+    def get_build_buy_options(self):
+        build_option = {
+            "cost": self.calculate_cost(),
+            "risk_score": self.calculate_risk()
+        }
+        buy_option = {
+            "cost": self.calculate_cost() * 0.8,  # assuming 20% cost reduction for buy option
+            "risk_score": self.calculate_risk() * 0.8  # assuming 20% risk reduction for buy option
+        }
+        return build_option, buy_option
 
-    def update_tool(self, tool_name: str, new_validation_data: Dict[str, str]):
-        if tool_name in self.knowledge_base:
-            self.knowledge_base[tool_name].validation_data = new_validation_data
-        else:
-            raise ValueError("Tool not found in knowledge base")
+def main():
+    tool_match = ToolMatch(
+        team_size=10,
+        tool_pricing={"tool1": 100, "tool2": 200},
+        development_hours=100,
+        technical_complexity=5,
+        maintenance_overhead=3,
+        integration_challenges=4
+    )
+    build_option, buy_option = tool_match.get_build_buy_options()
+    print(json.dumps({"build": build_option, "buy": buy_option}, indent=4))
+
+if __name__ == "__main__":
+    main()
