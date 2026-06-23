@@ -4,8 +4,8 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "toolmatch"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "A curated marketplace with ROI scoring"
 
 [tool.poetry.dependencies]
 python = "^3.8"
