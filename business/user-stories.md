@@ -1,0 +1,37 @@
+# 📄 user-stories.md  
+
+## Epic 1 – **Tool Discovery & Personalized Recommendation**  
+
+| # | User Story | Acceptance Criteria | Complexity |
+|---|------------|---------------------|------------|
+| 1 | **As a ML engineering manager, I want to answer a short questionnaire about my team’s stack and goals, so that I receive a curated list of tools that fit our needs.** | - Questionnaire contains ≤ 10 dynamic questions (tech stack, data volume, budget, compliance).<br>- Answers are saved securely and can be edited later.<br>- System returns a ranked list of ≥ 5 tools within 30 seconds.<br>- Each tool entry shows a one‑sentence value proposition, pricing tier, and integration compatibility.<br>- Recommendation can be exported as PDF or CSV. | M |
+| 2 | **As a data scientist, I want to browse a searchable catalog of ML tools, so that I can explore options beyond the auto‑generated list.** | - Full‑text search supports fuzzy matching and synonyms (e.g., “experiment tracking”, “MLflow”).<br>- Filters for category, pricing model, cloud provider, open‑source vs SaaS.<br>- Results display thumbnail, rating, and “Add to Compare” button.<br>- Pagination loads ≤ 20 items per page with < 200 ms latency.<br>- Search history is persisted per user for 30 days. | S |
+| 3 | **As a CTO, I want the platform to surface tools that have proven compliance (e.g., GDPR, SOC‑2), so that I can reduce legal risk.** | - Each tool entry includes a compliance badge list.<br>- Compliance data is sourced from vendor‑provided certifications and verified quarterly.<br>- Users can filter catalog by required compliance standards.<br>- Missing compliance information triggers a “Contact Vendor” prompt.<br>- Compliance filter can be combined with other filters without performance degradation. | M |
+
+## Epic 2 – **Tool Comparison & Evaluation**  
+
+| # | User Story | Acceptance Criteria | Complexity |
+|---|------------|---------------------|------------|
+| 4 | **As a product manager, I want to select up to 4 tools and view a side‑by‑side comparison matrix, so that I can quickly spot differences in features and cost.** | - Users can add/remove tools from a “Comparison Basket”.<br>- Matrix shows at least 8 key attributes (price, deployment, scalability, integrations, support SLA, compliance, community size, trial length).<br>- Differences are highlighted (e.g., green for advantage, red for drawback).<br>- Matrix can be exported as CSV/PNG.<br>- Comparison state is saved for 7 days. | M |
+| 5 | **As a ML ops engineer, I want to run a “sandbox trial” of a selected SaaS tool directly from the platform, so that I can evaluate it with real data before committing.** | - Sandbox provisioned within ≤ 5 minutes using a pre‑configured demo dataset.<br>- Trial environment is isolated per user and auto‑deleted after 48 hours.<br>- User receives a temporary API key with read‑only permissions.<br>- Platform captures usage metrics (queries, latency) and presents a summary report.<br>- If trial fails to launch, an automated support ticket is created. | L |
+| 6 | **As a finance analyst, I want a total cost of ownership (TCO) calculator that aggregates licensing, compute, and support costs, so that I can justify budget decisions.** | - Calculator accepts inputs: number of users, data volume, expected compute hours, contract length.<br>- Pulls up‑to‑date pricing from vendor APIs or stored price tables.<br>- Outputs monthly and annual cost breakdown with visual chart.<br>- Provides “What‑if” scenario toggles (e.g., 20 % usage growth).<br>- Exportable as PDF with company branding. | M |
+
+## Epic 3 – **Procurement, Integration & Onboarding**  
+
+| # | User Story | Acceptance Criteria | Complexity |
+|---|------------|---------------------|------------|
+| 7 | **As a procurement officer, I want to generate a single purchase order (PO) that bundles multiple selected tools, so that I can streamline vendor negotiations.** | - PO aggregates selected tools, quantities, and negotiated discounts.<br>- PO includes vendor contact details and contract start/end dates.<br>- PO can be sent directly to vendors via email with a unique tracking link.<br>- System logs PO status (draft, sent, accepted, rejected).<br>- Users can attach internal approval documents (PDF, DOCX). | M |
+| 8 | **As a ML engineer, I want one‑click generation of IaC (Terraform/Helm) snippets for the chosen tools, so that I can provision them in our cloud environment without manual scripting.** | - Supports AWS, GCP, Azure providers.<br>- Generates code for at least 3 integration patterns (managed SaaS, self‑hosted container, on‑prem VM).<br>- Code includes secret placeholders and recommended IAM roles.<br>- User can download as .zip or copy to clipboard.<br>- Validation step ensures generated code passes `terraform validate` (or equivalent). | L |
+| 9 | **As a security lead, I want automated security policy checks for each selected tool (e.g., open ports, data residency), so that I can ensure compliance before deployment.** | - Runs a predefined policy suite (CIS, OWASP) against tool’s public documentation and API specs.<br>- Returns a pass/fail badge with a short remediation note.<br>- Policy results are stored in the tool’s profile for audit purposes.<br>- Users can override a failing check with a justification comment.<br>- All checks complete within 15 seconds per tool. | M |
+
+## Epic 4 – **Governance, Feedback & Continuous Improvement**  
+
+| # | User Story | Acceptance Criteria | Complexity |
+|---|------------|---------------------|------------|
+| 10 | **As a team lead, I want to submit post‑adoption feedback (rating, pros/cons, usage metrics), so that the marketplace can improve recommendations for future users.** | - Feedback form appears 7 days after purchase or trial end.<br>- Allows 1‑5 star rating, free‑text comments, and optional upload of usage logs (max 5 MB).<br>- Submitted feedback updates the tool’s overall rating in real time.<br>- Anonymous option preserves user privacy.<br>- Admin dashboard shows aggregated feedback trends. | S |
+| 11 | **As a platform admin, I want to monitor key health metrics (conversion rate, average TCO, trial success rate), so that I can identify bottlenecks and prioritize product improvements.** | - Dashboard displays at least 5 KPIs with week‑over‑week delta.<br>- Alerts trigger when conversion < 5 % or trial success < 70 % for any tool.<br>- Data refreshes every 12 hours from the event store.<br>- Admin can export raw metric data as CSV.<br>- Role‑based access ensures only admins view this dashboard. | S |
+| 12 | **As a developer advocate, I want an API that returns tool recommendations based on input parameters (stack, budget), so that we can embed the service into partner portals.** | - REST endpoint `/recommendations` accepts JSON payload (stack, budget, compliance).<br>- Returns up to 10 tool objects with fields: id, name, short description, price, compliance badges.<br>- API key authentication with rate limit 100 req/min.<br>- SLA: 95 % of calls respond ≤ 200 ms.<br>- Comprehensive OpenAPI spec and example client SDKs (Python, JS). | M |
+
+---  
+
+*All stories are written in Connextra format, include 3‑5 acceptance criteria, and are sized for sprint planning (S = ≤ 2 person‑days, M = 2‑5 person‑days, L = > 5 person‑days).*
